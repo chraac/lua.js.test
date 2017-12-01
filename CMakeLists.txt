@@ -31,7 +31,7 @@ target_compile_definitions(lua.test PRIVATE
 )
 target_compile_options(lua.test PRIVATE 
     -fexceptions
-    -std=c++11
+    $<$<COMPILE_LANGUAGE:CXX>:-std=c++11>
 )
 
 if(IS_MAC OR IS_IOS)
@@ -49,8 +49,16 @@ if(IS_MAC OR IS_IOS)
         luaP_opnames=luaP_opnames_
         luaP_opmodes=luaP_opmodes_
     )
-    set_target_properties(lua.test PROPERTIES 
-        XCODE_ATTRIBUTE_GCC_INPUT_FILETYPE "sourcecode.cpp.cpp"
+    find_library(UIKIT UIKit)
+    find_library(FOUNDATION Foundation)
+    target_link_libraries(lua.test PRIVATE
+        ${FOUNDATION}
+        ${UIKIT}
+    )
+    set_target_properties(lua.test PROPERTIES
+        XCODE_ATTRIBUTE_ALWAYS_SEARCH_USER_PATHS "NO"
+        XCODE_ATTRIBUTE_CLANG_ENABLE_MODULES "YES"
+        XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC "YES"
         XCODE_ATTRIBUTE_GCC_ENABLE_CPP_EXCEPTIONS "YES"
         XCODE_ATTRIBUTE_GCC_DYNAMIC_NO_PIC "0"
         XCODE_ATTRIBUTE_GCC_SYMBOLS_PRIVATE_EXTERN "NO"
@@ -63,6 +71,7 @@ if(IS_MAC OR IS_IOS)
         XCODE_ATTRIBUTE_SDKROOT "iphoneos"
         XCODE_ATTRIBUTE_VALID_ARCHS "arm64 armv7 armv7s i386 x86_64"
         XCODE_ATTRIBUTE_OTHER_LDFLAGS "-ObjC"
+        XCODE_ATTRIBUTE_SKIP_INSTALL "YES"
         XCODE_ATTRIBUTE_INFOPLIST_FILE "$(SRCROOT)/ios/Info.plist"
         XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon"
         XCODE_ATTRIBUTE_MACH_O_TYPE "mh_execute"
