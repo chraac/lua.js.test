@@ -7,6 +7,8 @@
 //
 
 #import "ViewController.h"
+#include "luatest.h"
+#include "jstest.h"
 
 @interface ViewController ()
 

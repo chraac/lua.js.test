@@ -42,6 +42,9 @@ if(IS_MAC OR IS_IOS)
         "./ios/Main.storyboard"
         "./ios/Info.plist"
     )
+    target_include_directories(lua.test PUBLIC
+        "./"
+    )
     target_compile_definitions(lua.test PRIVATE 
         LUA_COMPAT_PACKAGELIB
         LUA_COMPAT_IOLIB
