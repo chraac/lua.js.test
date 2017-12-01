@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
-        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -14,6 +13,10 @@
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="ZR6-7k-ebt"/>
+                        <viewControllerLayoutGuide type="bottom" id="N1Z-Cj-qne"/>
+                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -48,20 +51,19 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="hLC-5C-dmp" firstAttribute="leading" secondItem="cif-TJ-oOf" secondAttribute="trailing" constant="150" id="7sj-mx-VpP"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="hLC-5C-dmp" secondAttribute="trailing" constant="30" id="9K2-Cf-TEq"/>
+                            <constraint firstAttribute="trailing" secondItem="hLC-5C-dmp" secondAttribute="trailing" constant="30" id="9K2-Cf-TEq"/>
                             <constraint firstItem="P2E-fM-Xmf" firstAttribute="top" secondItem="cif-TJ-oOf" secondAttribute="bottom" constant="16" id="Dzj-2n-36F"/>
                             <constraint firstItem="hLC-5C-dmp" firstAttribute="width" secondItem="cif-TJ-oOf" secondAttribute="width" id="Jph-US-7Lp"/>
-                            <constraint firstItem="hLC-5C-dmp" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="JqQ-bR-PKC"/>
-                            <constraint firstItem="cif-TJ-oOf" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Lhe-bN-CPX"/>
-                            <constraint firstItem="P2E-fM-Xmf" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="PsF-1p-XaR"/>
+                            <constraint firstItem="hLC-5C-dmp" firstAttribute="top" secondItem="ZR6-7k-ebt" secondAttribute="bottom" id="JqQ-bR-PKC"/>
+                            <constraint firstItem="cif-TJ-oOf" firstAttribute="top" secondItem="ZR6-7k-ebt" secondAttribute="bottom" id="Lhe-bN-CPX"/>
+                            <constraint firstItem="P2E-fM-Xmf" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="16" id="PsF-1p-XaR"/>
                             <constraint firstItem="hLC-5C-dmp" firstAttribute="top" secondItem="cif-TJ-oOf" secondAttribute="top" id="Qyc-Wi-XeX"/>
-                            <constraint firstItem="cif-TJ-oOf" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="iNu-1R-z0B"/>
+                            <constraint firstItem="cif-TJ-oOf" firstAttribute="top" secondItem="ZR6-7k-ebt" secondAttribute="bottom" id="iNu-1R-z0B"/>
                             <constraint firstItem="hLC-5C-dmp" firstAttribute="height" secondItem="cif-TJ-oOf" secondAttribute="height" id="l1K-vt-Ixy"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="P2E-fM-Xmf" secondAttribute="trailing" constant="16" id="qwF-Xf-ERF"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="P2E-fM-Xmf" secondAttribute="bottom" constant="16" id="tsj-Jf-dCe"/>
-                            <constraint firstItem="cif-TJ-oOf" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="yra-6W-Lc6"/>
+                            <constraint firstAttribute="trailing" secondItem="P2E-fM-Xmf" secondAttribute="trailing" constant="16" id="qwF-Xf-ERF"/>
+                            <constraint firstItem="N1Z-Cj-qne" firstAttribute="top" secondItem="P2E-fM-Xmf" secondAttribute="bottom" constant="16" id="tsj-Jf-dCe"/>
+                            <constraint firstItem="cif-TJ-oOf" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="30" id="yra-6W-Lc6"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
                         <outlet property="_textView" destination="P2E-fM-Xmf" id="uey-AR-HSD"/>

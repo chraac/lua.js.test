@@ -40,6 +40,7 @@ if(IS_MAC OR IS_IOS)
         "./ios/AppDelegate.m"
         "./ios/ViewController.mm"
         "./ios/Main.storyboard"
+        "./ios/Info.plist"
     )
     target_compile_definitions(lua.test PRIVATE 
         LUA_COMPAT_PACKAGELIB
@@ -56,6 +57,7 @@ if(IS_MAC OR IS_IOS)
         ${UIKIT}
     )
     set_target_properties(lua.test PROPERTIES
+        RESOURCE "./ios/Main.storyboard"
         XCODE_ATTRIBUTE_ALWAYS_SEARCH_USER_PATHS "NO"
         XCODE_ATTRIBUTE_CLANG_ENABLE_MODULES "YES"
         XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC "YES"
@@ -73,7 +75,7 @@ if(IS_MAC OR IS_IOS)
         XCODE_ATTRIBUTE_OTHER_LDFLAGS "-ObjC"
         XCODE_ATTRIBUTE_SKIP_INSTALL "YES"
         XCODE_ATTRIBUTE_INFOPLIST_FILE "$(SRCROOT)/ios/Info.plist"
-        XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon"
+        XCODE_ATTRIBUTE_INSTALL_PATH "$(LOCAL_APPS_DIR)"
         XCODE_ATTRIBUTE_MACH_O_TYPE "mh_execute"
     )
 endif()
