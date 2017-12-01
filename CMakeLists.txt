@@ -34,7 +34,13 @@ target_compile_options(lua.test PRIVATE
     -std=c++11
 )
 
-if(IS_MAC)
+if(IS_MAC OR IS_IOS)
+    target_sources(lua.test PRIVATE
+        "./ios/main.m"
+        "./ios/AppDelegate.m"
+        "./ios/ViewController.mm"
+        "./ios/Main.storyboard"
+    )
     target_compile_definitions(lua.test PRIVATE 
         LUA_COMPAT_PACKAGELIB
         LUA_COMPAT_IOLIB
@@ -46,5 +52,12 @@ if(IS_MAC)
     set_target_properties(lua.test PROPERTIES 
         XCODE_ATTRIBUTE_GCC_INPUT_FILETYPE "sourcecode.cpp.cpp"
         XCODE_ATTRIBUTE_GCC_ENABLE_CPP_EXCEPTIONS "YES"
+        XCODE_ATTRIBUTE_GCC_DYNAMIC_NO_PIC "0"
+        XCODE_ATTRIBUTE_GCC_SYMBOLS_PRIVATE_EXTERN "NO"
+        XCODE_ATTRIBUTE_MTL_ENABLE_DEBUG_INFO "YES"
+        XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH "YES"
+        XCODE_ATTRIBUTE_INFOPLIST_FILE "$(SRCROOT)/ios/Info.plist"
+        XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon"
+        XCODE_ATTRIBUTE_MACH_O_TYPE "mh_execute"
     )
 endif()
