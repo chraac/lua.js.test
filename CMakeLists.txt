@@ -6,23 +6,23 @@ project(lua.test C CXX)
 
 include(systemchecker.cmake)
 
-if(IS_WINDOWS)
-    set(EXE_TYPE "")
-elseif(IS_MAC)
-    set(EXE_TYPE MACOSX_BUNDLE)
-endif()
-
-add_executable(lua.test ${EXE_TYPE}
-    "main.cpp"
-)
-
 file(GLOB lua_srcs
     "./lua/*.c*"
 )
-target_sources(lua.test PRIVATE
-    ${lua_srcs}
-)
-set_source_files_properties(${lua_srcs} PROPERTIES LANGUAGE CXX)
+
+if(IS_WINDOWS)
+    add_executable(lua.test
+        ${lua_srcs}
+        "main.cpp"
+    )
+    set_source_files_properties(${lua_srcs} PROPERTIES LANGUAGE CXX)
+elseif(IS_MAC OR IS_IOS)
+    add_executable(lua.test MACOSX_BUNDLE
+        ${lua_srcs}
+    )
+    set(SDK_ROOT ${CMAKE_IOS_SDK_ROOT})
+endif()
+
 target_include_directories(lua.test PUBLIC
     "./lua"	
 )
@@ -56,6 +56,13 @@ if(IS_MAC OR IS_IOS)
         XCODE_ATTRIBUTE_GCC_SYMBOLS_PRIVATE_EXTERN "NO"
         XCODE_ATTRIBUTE_MTL_ENABLE_DEBUG_INFO "YES"
         XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH "YES"
+        XCODE_ATTRIBUTE_COPY_PHASE_STRIP "YES"
+        XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT "dwarf-with-dsym"
+        XCODE_ATTRIBUTE_ENABLE_STRICT_OBJC_MSGSEND "YES"
+        XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET "7.0"
+        XCODE_ATTRIBUTE_SDKROOT "iphoneos"
+        XCODE_ATTRIBUTE_VALID_ARCHS "arm64 armv7 armv7s i386 x86_64"
+        XCODE_ATTRIBUTE_OTHER_LDFLAGS "-ObjC"
         XCODE_ATTRIBUTE_INFOPLIST_FILE "$(SRCROOT)/ios/Info.plist"
         XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon"
         XCODE_ATTRIBUTE_MACH_O_TYPE "mh_execute"
