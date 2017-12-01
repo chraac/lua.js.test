@@ -7,7 +7,7 @@ project(lua.test C CXX)
 include(systemchecker.cmake)
 
 if(IS_WINDOWS)
-    set(EXE_TYPE WIN32)
+    set(EXE_TYPE "")
 elseif(IS_MAC)
     set(EXE_TYPE MACOSX_BUNDLE)
 endif()
