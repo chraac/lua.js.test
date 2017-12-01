@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" restorationIdentifier="luaTest" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cif-TJ-oOf">
+                                <rect key="frame" x="30" y="20" width="82.5" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="utN-4Z-cwS"/>
+                                </constraints>
+                                <state key="normal" title="lua"/>
+                                <connections>
+                                    <action selector="luaTestClick:" destination="BYZ-38-t0r" eventType="touchDown" id="ddO-Ls-XHt"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" restorationIdentifier="jsTest" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hLC-5C-dmp">
+                                <rect key="frame" x="262.5" y="20" width="82.5" height="30"/>
+                                <state key="normal" title="js"/>
+                                <connections>
+                                    <action selector="jsTestClick:" destination="BYZ-38-t0r" eventType="touchDown" id="WRx-to-4mj"/>
+                                </connections>
+                            </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" restorationIdentifier="logView" showsVerticalScrollIndicator="NO" editable="NO" text="test" translatesAutoresizingMaskIntoConstraints="NO" id="P2E-fM-Xmf">
+                                <rect key="frame" x="16" y="66" width="343" height="585"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" staticText="YES"/>
+                                </accessibility>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="hLC-5C-dmp" firstAttribute="leading" secondItem="cif-TJ-oOf" secondAttribute="trailing" constant="150" id="7sj-mx-VpP"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="hLC-5C-dmp" secondAttribute="trailing" constant="30" id="9K2-Cf-TEq"/>
+                            <constraint firstItem="P2E-fM-Xmf" firstAttribute="top" secondItem="cif-TJ-oOf" secondAttribute="bottom" constant="16" id="Dzj-2n-36F"/>
+                            <constraint firstItem="hLC-5C-dmp" firstAttribute="width" secondItem="cif-TJ-oOf" secondAttribute="width" id="Jph-US-7Lp"/>
+                            <constraint firstItem="hLC-5C-dmp" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="JqQ-bR-PKC"/>
+                            <constraint firstItem="cif-TJ-oOf" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Lhe-bN-CPX"/>
+                            <constraint firstItem="P2E-fM-Xmf" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="PsF-1p-XaR"/>
+                            <constraint firstItem="hLC-5C-dmp" firstAttribute="top" secondItem="cif-TJ-oOf" secondAttribute="top" id="Qyc-Wi-XeX"/>
+                            <constraint firstItem="cif-TJ-oOf" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="iNu-1R-z0B"/>
+                            <constraint firstItem="hLC-5C-dmp" firstAttribute="height" secondItem="cif-TJ-oOf" secondAttribute="height" id="l1K-vt-Ixy"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="P2E-fM-Xmf" secondAttribute="trailing" constant="16" id="qwF-Xf-ERF"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="P2E-fM-Xmf" secondAttribute="bottom" constant="16" id="tsj-Jf-dCe"/>
+                            <constraint firstItem="cif-TJ-oOf" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="yra-6W-Lc6"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <connections>
+                        <outlet property="_textView" destination="P2E-fM-Xmf" id="uey-AR-HSD"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="117.59999999999999" y="117.39130434782609"/>
+        </scene>
+    </scenes>
+</document>
