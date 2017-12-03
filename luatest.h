@@ -85,7 +85,8 @@ namespace LuaTest
             lua_pushcfunction(state, callback);
             lua_setglobal(state, "sub");
 
-            luaL_dostring(state, R"--(sub(1, 2))--");
+            luaL_dostring(state, R"--(res = sub(1, 2))--");
+            lua_getglobal(state, "res");
             auto result = lua_tonumber(state, -1);
             lua_pop(state, 1);
             GetOutputStream() << "lua function callback sub(1, 2), return " << result << std::endl;
