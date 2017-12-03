@@ -12,6 +12,7 @@
 #include "lua.h"
 #include "lualib.h"
 #include "lauxlib.h"
+#include "testcommon.h"
 #include <sstream>
 
 
@@ -141,25 +142,11 @@ namespace LuaTest
     };
 
     const char *kClassName = "TestClass";
-    class TestMain
+    class TestMain : public TestCommon::TestBase<TestMain>
     {
+        friend class TestCommon::TestBase<TestMain>;
+        TestMain(){}
     public:
-        static TestMain &GetInstance()
-        {
-            static TestMain instance;
-            return instance;
-        }
-
-        void SetOutputStream(std::stringstream &ss)
-        {
-            m_ss = &ss;
-        }
-
-        std::stringstream &GetOutputStream() 
-        {
-            return *m_ss;
-        }
-
         void RunAllTest()
         {
             GetOutputStream() << "lua.test.state.create" << std::endl;
@@ -321,14 +308,8 @@ namespace LuaTest
         }
         
     private:
-        std::stringstream *m_ss;
-
-        TestMain() { m_ss = nullptr; }
-
-        TestMain(TestMain&);
-        TestMain(TestMain&&);
-        void operator=(TestMain&);
-        void operator=(TestMain&&);
+        DISALLOW_COPY(TestMain);
+        DISALLOW_MOVE(TestMain);
     };
 }
 

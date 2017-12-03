@@ -1,18 +1,16 @@
 //
-//  main.cpp
-//  jscore.test
+//  jstest.h
 //
 //  Created by hongruichen on 2017/11/27.
-//  Copyright © 2017年 hongruichen. All rights reserved.
+//  Copyright © 2017 hongruichen. All rights reserved.
 //
 
-#include <iostream>
+#include <sstream>
 #include <vector>
 #include <JavaScriptCore/JavaScriptCore.h>
-using namespace std;
 
 
-namespace
+namespace JSTest
 {
     template <typename _Ty>
     class Allocator {};
@@ -171,16 +169,48 @@ namespace
         void operator=(const HandlerWithContext&) = delete;
     };
     
-    auto MakeString(const char *sz)
+    Handler<JSStringRef> MakeString(const char *sz)
     {
         return Handler<JSStringRef>(JSStringCreateWithUTF8CString(sz));
     }
     
     template<typename _Ty>
-    auto MakeHandlerWithContext(JSContextRef ctx, _Ty value)
+    HandlerWithContext<_Ty> MakeHandlerWithContext(JSContextRef ctx, _Ty value)
     {
         return HandlerWithContext<_Ty>(ctx, value);
     }
+    
+    
+    const char *kClassName = "TestClass";
+    class TestMain
+    {
+    public:
+        static TestMain &GetInstance()
+        {
+            static TestMain instance;
+            return instance;
+        }
+        
+        void SetOutputStream(std::stringstream &ss)
+        {
+            m_ss = &ss;
+        }
+        
+        std::stringstream &GetOutputStream()
+        {
+            return *m_ss;
+        }
+        
+    private:
+        std::stringstream *m_ss;
+        
+        TestMain() { m_ss = nullptr; }
+        
+        TestMain(TestMain&);
+        TestMain(TestMain&&);
+        void operator=(TestMain&);
+        void operator=(TestMain&&);
+    };
 }
 
 
