@@ -150,8 +150,9 @@ namespace JSTest
                 JSGarbageCollect(ctx);
             }
             
-            auto scriptString = MakeString(R"--(var tst = new TestClass();tst.testValue = 789;var t = tst.testValue;tst.testFunc();)--");
+            auto scriptString = MakeString(R"--(var tst = new TestClass();tst.testValue = 789;var t = tst.testValue;tst.testFunc();tst=null;)--");
             JSEvaluateScript(ctx, scriptString, nullptr, nullptr, 0, &exception);
+            JSGarbageCollect(ctx);
         }
         
         DISALLOW_COPY(TestMain);
