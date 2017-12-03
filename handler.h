@@ -12,6 +12,17 @@
 #include "testcommon.h"
 #include "lua.h"
 
+#define COMMON_MOVE_FUNCTIONS(clz, super) \
+    clz(clz &&obj) \
+    { \
+        (*this) = std::move(obj); \
+    } \
+    void operator=(clz &&obj) \
+    { \
+        *((super*)this) = std::move(obj); \
+    }
+
+
 namespace TestCommon
 {
     template <typename _Ty>
@@ -113,36 +124,21 @@ namespace TestCommon
         typedef JSObjectRef ObjectType;
     };
     
-    template <typename _Ty,
-        bool _hasContext = Allocator<_Ty>::HasContext,
-        bool _hasAllocator = Allocator<_Ty>::HasAllocator>
-    class Handler {};
     
     template <typename _Ty>
-    class Handler<_Ty, true, false>
+    class HandlerBase
     {
     public:
         typedef _Ty ObjectType;
-        typedef Allocator<_Ty> Allocator;
-        typedef typename Allocator::ContextType ContextType;
         
-        explicit Handler(ContextType ctx, ObjectType obj)
-        : m_object(obj)
-        , m_context(ctx)
+        HandlerBase()
         {
+            m_object = nullptr;
         }
         
-        Handler(Handler &&handler)
+        HandlerBase(HandlerBase &&handler)
         {
             (*this) = std::move(handler);
-        }
-        
-        virtual ~Handler()
-        {
-            if (m_object)
-            {
-                Allocator::dealloc(m_context, m_object);
-            }
         }
         
         ObjectType Get()const
@@ -150,7 +146,7 @@ namespace TestCommon
             return m_object;
         }
         
-        void operator=(Handler &&handler)
+        void operator=(HandlerBase &&handler)
         {
             m_object = handler.m_object;
             handler.m_object = nullptr;
@@ -164,165 +160,125 @@ namespace TestCommon
         
     protected:
         ObjectType m_object;
-        ContextType m_context;
         
     private:
-        Handler(const Handler&) = delete;
-        void operator=(const Handler&) = delete;
+        DISALLOW_COPY(HandlerBase);
     };
     
+    template <typename _Ty,
+        bool _hasContext = Allocator<_Ty>::HasContext,
+        bool _hasAllocator = Allocator<_Ty>::HasAllocator>
+    class Handler{};
+    
     template <typename _Ty>
-    class Handler<_Ty, false, true>
+    class Handler<_Ty, true, false> : public HandlerBase<_Ty>
     {
     public:
         typedef _Ty ObjectType;
+        typedef HandlerBase<_Ty> SuperType;
+        typedef Allocator<_Ty> Allocator;
+        typedef typename Allocator::ContextType ContextType;
+        
+        explicit Handler(ContextType ctx, ObjectType obj)
+        : m_context(ctx)
+        {
+            SuperType::m_object = obj;
+        }
+        virtual ~Handler()
+        {
+            if (SuperType::m_object)
+            {
+                Allocator::dealloc(m_context, SuperType::m_object);
+            }
+        }
+        COMMON_MOVE_FUNCTIONS(Handler, SuperType);
+        
+    protected:
+        ContextType m_context;
+        
+    private:
+        DISALLOW_COPY(Handler);
+    };
+    
+    template <typename _Ty>
+    class Handler<_Ty, false, true> : public HandlerBase<_Ty>
+    {
+    public:
+        typedef _Ty ObjectType;
+        typedef HandlerBase<_Ty> SuperType;
         typedef Allocator<_Ty> Allocator;
         
         Handler()
         {
-            m_object = Allocator::alloc();
+            SuperType::m_object = Allocator::alloc();
         }
-        
-        Handler(Handler &&handler)
+        ~Handler()
         {
-            (*this) = std::move(handler);
-        }
-        
-        virtual ~Handler()
-        {
-            if (m_object)
+            if (SuperType::m_object)
             {
-                Allocator::dealloc(m_object);
+                Allocator::dealloc(SuperType::m_object);
             }
         }
-        
-        ObjectType Get()const
-        {
-            return m_object;
-        }
-        
-        void operator=(Handler &&handler)
-        {
-            m_object = handler.m_object;
-            handler.m_object = nullptr;
-        }
-        
-        operator ObjectType()const
-        {
-            return Get();
-        }
-        
-        
-    protected:
-        ObjectType m_object;
+        COMMON_MOVE_FUNCTIONS(Handler, SuperType);
         
     private:
-        Handler(const Handler&) = delete;
-        void operator=(const Handler&) = delete;
+        DISALLOW_COPY(Handler);
     };
     
     template <typename _Ty>
-    class Handler<_Ty, false, false>
+    class Handler<_Ty, false, false> : public HandlerBase<_Ty>
     {
     public:
         typedef _Ty ObjectType;
+        typedef HandlerBase<_Ty> SuperType;
         typedef Allocator<_Ty> Allocator;
         
         explicit Handler(ObjectType obj)
-        : m_object(obj)
         {
+            SuperType::m_object = obj;
         }
-        
-        Handler(Handler &&handler)
+        ~Handler()
         {
-            (*this) = std::move(handler);
-        }
-        
-        virtual ~Handler()
-        {
-            if (m_object)
+            if (SuperType::m_object)
             {
-                Allocator::dealloc(m_object);
+                Allocator::dealloc(SuperType::m_object);
             }
         }
-        
-        ObjectType Get()const
-        {
-            return m_object;
-        }
-        
-        void operator=(Handler &&handler)
-        {
-            m_object = handler.m_object;
-            handler.m_object = nullptr;
-        }
-        
-        operator ObjectType()const
-        {
-            return Get();
-        }
-        
-        
-    protected:
-        ObjectType m_object;
+        COMMON_MOVE_FUNCTIONS(Handler, SuperType);
         
     private:
-        Handler(const Handler&) = delete;
-        void operator=(const Handler&) = delete;
+        DISALLOW_COPY(Handler);
     };
     
     template <typename _Ty>
-    class Handler<_Ty, true, true>
+    class Handler<_Ty, true, true> : public HandlerBase<_Ty>
     {
     public:
         typedef _Ty ObjectType;
+        typedef HandlerBase<_Ty> SuperType;
         typedef Allocator<_Ty> Allocator;
         typedef typename Allocator::ContextType ContextType;
         
         explicit Handler(ContextType ctx, ObjectType obj)
-        : m_object(obj)
-        , m_context(ctx)
+        : m_context(ctx)
         {
+            SuperType::m_object = obj;
             Allocator::alloc(ctx, obj);
         }
-        
-        Handler(Handler &&handler)
+        ~Handler()
         {
-            (*this) = std::move(handler);
-        }
-        
-        virtual ~Handler()
-        {
-            if (m_object)
+            if (SuperType::m_object)
             {
-                Allocator::dealloc(m_context, m_object);
+                Allocator::dealloc(m_context, SuperType::m_object);
             }
         }
-        
-        ObjectType Get()const
-        {
-            return m_object;
-        }
-        
-        void operator=(Handler &&handler)
-        {
-            m_object = handler.m_object;
-            handler.m_object = nullptr;
-        }
-        
-        operator ObjectType()const
-        {
-            return Get();
-        }
-        
+        COMMON_MOVE_FUNCTIONS(Handler, SuperType);
         
     protected:
-        ObjectType m_object;
         ContextType m_context;
         
     private:
-        Handler(const Handler&) = delete;
-        void operator=(const Handler&) = delete;
+        DISALLOW_COPY(Handler);
     };
 }
 

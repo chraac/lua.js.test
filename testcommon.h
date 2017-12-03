@@ -8,8 +8,8 @@
 #ifndef __TESTCOMMON_H__
 #define __TESTCOMMON_H__
 
-#define DISALLOW_COPY(clz) clz(clz&);void operator=(clz&)
-#define DISALLOW_MOVE(clz) clz(clz&&);void operator=(clz&&)
+#define DISALLOW_COPY(clz) clz(clz&)=delete;void operator=(clz&)=delete
+#define DISALLOW_MOVE(clz) clz(clz&&)=delete;void operator=(clz&&)=delete
 
 #include <sstream>
 
