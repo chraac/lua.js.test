@@ -9,53 +9,59 @@ include(systemchecker.cmake)
 file(GLOB lua_srcs
     "./lua/*.c*"
 )
+add_library(lua STATIC
+    ${lua_srcs}
+)
+target_include_directories(lua PUBLIC
+    "./lua"	
+)
+target_compile_definitions(lua PUBLIC
+    LUA_LIB
+    LUA_COMPAT_PACKAGELIB
+    LUA_COMPAT_IOLIB
+    luai_ctype_=luai_ctype__
+    luaO_nilobject_=luaO_nilobject__
+    luaP_opnames=luaP_opnames_
+    luaP_opmodes=luaP_opmodes_
+)
+target_compile_options(lua PUBLIC 
+    -fexceptions
+    $<$<COMPILE_LANGUAGE:CXX>:-std=c++11>
+)
+set_target_properties(lua PROPERTIES 
+    XCODE_ATTRIBUTE_GCC_INPUT_FILETYPE "sourcecode.cpp.cpp"
+    XCODE_ATTRIBUTE_GCC_ENABLE_CPP_EXCEPTIONS "YES"
+)
 
 if(IS_WINDOWS)
     add_executable(lua.test
-        ${lua_srcs}
         "main.cpp"
     )
     set_source_files_properties(${lua_srcs} PROPERTIES LANGUAGE CXX)
 elseif(IS_MAC OR IS_IOS)
     add_executable(lua.test MACOSX_BUNDLE
-        ${lua_srcs}
-    )
-    set(SDK_ROOT ${CMAKE_IOS_SDK_ROOT})
-endif()
-
-target_include_directories(lua.test PUBLIC
-    "./lua"	
-)
-target_compile_definitions(lua.test PRIVATE 
-    LUA_LIB
-)
-target_compile_options(lua.test PRIVATE 
-    -fexceptions
-    $<$<COMPILE_LANGUAGE:CXX>:-std=c++11>
-)
-
-if(IS_MAC OR IS_IOS)
-    target_sources(lua.test PRIVATE
         "./ios/main.m"
         "./ios/AppDelegate.m"
         "./ios/ViewController.mm"
         "./ios/Main.storyboard"
         "./ios/Info.plist"
     )
+    set(SDK_ROOT ${CMAKE_IOS_SDK_ROOT})
+endif()
+
+target_compile_options(lua.test PRIVATE 
+    -fexceptions
+    $<$<COMPILE_LANGUAGE:CXX>:-std=c++11>
+)
+
+if(IS_MAC OR IS_IOS)
     target_include_directories(lua.test PUBLIC
         "./"
-    )
-    target_compile_definitions(lua.test PRIVATE 
-        LUA_COMPAT_PACKAGELIB
-        LUA_COMPAT_IOLIB
-        luai_ctype_=luai_ctype__
-        luaO_nilobject_=luaO_nilobject__
-        luaP_opnames=luaP_opnames_
-        luaP_opmodes=luaP_opmodes_
     )
     find_library(UIKIT UIKit)
     find_library(FOUNDATION Foundation)
     target_link_libraries(lua.test PRIVATE
+        lua
         ${FOUNDATION}
         ${UIKIT}
     )

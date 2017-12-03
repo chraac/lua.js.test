@@ -8,7 +8,8 @@
 
 #import "ViewController.h"
 #include "luatest.h"
-#include "jstest.h"
+//#include "jstest.h"
+#include <iostream>
 
 @interface ViewController ()
 
@@ -25,6 +26,11 @@
 
 - (IBAction)luaTestClick:(id)sender {
     NSLog(@"luaTestClick");
+    std::stringstream ss;
+    auto &test = LuaTest::TestMain::GetInstance();
+    test.SetOutputStream(ss);
+    test.RunAllTest();
+    [_textView setText:[NSString stringWithUTF8String:ss.str().c_str()]];
 }
 - (IBAction)jsTestClick:(id)sender {
     NSLog(@"jsTestClick");
