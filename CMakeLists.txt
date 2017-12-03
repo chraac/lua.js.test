@@ -40,6 +40,10 @@ if(IS_WINDOWS)
     set_source_files_properties(${lua_srcs} PROPERTIES LANGUAGE CXX)
 elseif(IS_MAC OR IS_IOS)
     add_executable(lua.test MACOSX_BUNDLE
+        "./luatest.h"
+        "./jstest.h"
+        "./testcommon.h"
+        "./handler.h"
         "./ios/main.m"
         "./ios/AppDelegate.m"
         "./ios/ViewController.mm"
