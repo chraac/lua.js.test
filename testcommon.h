@@ -12,6 +12,7 @@
 #define DISALLOW_MOVE(clz) clz(clz&&)=delete;void operator=(clz&&)=delete
 
 #include <sstream>
+#include <functional>
 
 namespace TestCommon
 {
@@ -19,6 +20,8 @@ namespace TestCommon
     class TestBase
     {
     public:
+        typedef std::function<void()> TestEvent;
+        
         static _Ty &GetInstance()
         {
             static _Ty instance;
@@ -36,7 +39,7 @@ namespace TestCommon
         }
         
         
-        virtual void RunAllTest() = 0;
+        virtual void RunAllTest(TestEvent start, TestEvent end) = 0;
         
     protected:
         std::stringstream *m_ss;

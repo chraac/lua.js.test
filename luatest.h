@@ -25,10 +25,14 @@ namespace LuaTest
         friend class TestCommon::TestBase<TestMain>;
         TestMain(){}
     public:
-        void RunAllTest()
+        void RunAllTest(TestEvent start, TestEvent end)
         {
             GetOutputStream() << "lua.test.state.create" << std::endl;
 
+            if (start)
+            {
+                start();
+            }
             auto state = TestCommon::Handler<lua_State*>();
             const luaL_Reg loadedlibs[] = {
                 { "_G", luaopen_base },
@@ -52,6 +56,11 @@ namespace LuaTest
             RunCallFunctionTest(state);
             RunFunctionCallbackTest(state);
             RunClassTest(state);
+            if (end)
+            {
+                end();
+            }
+            
             GetOutputStream() << "lua.test.end" << std::endl;
 
             GetOutputStream() << "lua.test.state.destroy" << std::endl;
