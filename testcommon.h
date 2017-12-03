@@ -5,6 +5,9 @@
 //  Copyright © 2017 hongruichen. All rights reserved.
 //
 
+#ifndef __TESTCOMMON_H__
+#define __TESTCOMMON_H__
+
 #define DISALLOW_COPY(clz) clz(clz&);void operator=(clz&)
 #define DISALLOW_MOVE(clz) clz(clz&&);void operator=(clz&&)
 
@@ -45,3 +48,5 @@ namespace TestCommon
         DISALLOW_MOVE(TestBase);
     };
 }
+
+#endif

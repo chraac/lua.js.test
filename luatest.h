@@ -13,134 +13,12 @@
 #include "lualib.h"
 #include "lauxlib.h"
 #include "testcommon.h"
+#include "handler.h"
 #include <sstream>
 
 
 namespace LuaTest
 {
-    typedef lua_State* lua_State_Ptr;
- 
-    template <typename _Ty>
-    class Allocator {};
-    
-    template<>
-    class Allocator<lua_State_Ptr>
-    {
-    public:
-        typedef lua_State_Ptr ObjectType;
-        
-        static ObjectType alloc() 
-        {
-            return luaL_newstate();
-        }
-
-        static void dealloc(ObjectType state)
-        {
-            lua_close(state);
-        }
-    };
-    
-    template <typename _Ty, typename _Allocator = Allocator<_Ty>>
-    class Handler
-    {
-    public:
-        typedef _Ty ObjectType;
-        typedef _Allocator Allocator;
-        
-        explicit Handler(ObjectType obj)
-        : m_object(obj)
-        {
-        }
-        
-        Handler(Handler &&handler)
-        {
-            (*this) = std::move(handler);
-        }
-        
-        virtual ~Handler()
-        {
-            if (m_object)
-            {
-                Allocator::dealloc(nullptr, m_object);
-            }
-        }
-        
-        ObjectType Get()const
-        {
-            return m_object;
-        }
-        
-        void operator=(Handler &&handler)
-        {
-            m_object = handler.m_object;
-            handler.m_object = nullptr;
-        }
-        
-        operator ObjectType()const
-        {
-            return Get();
-        }
-        
-        
-    protected:
-        ObjectType m_object;
-        lua_State_Ptr m_state;
-        
-    private:
-        Handler(const Handler&) = delete;
-        void operator=(const Handler&) = delete;
-    };
-
-    template <>
-    class Handler<lua_State_Ptr>
-    {
-    public:
-        typedef lua_State_Ptr ObjectType;
-        typedef Allocator<lua_State_Ptr> Allocator;
-
-        Handler()
-        {
-            m_object = Allocator::alloc();
-        }
-
-        Handler(Handler &&handler)
-        {
-            (*this) = std::move(handler);
-        }
-
-        virtual ~Handler()
-        {
-            if (m_object)
-            {
-                Allocator::dealloc(m_object);
-            }
-        }
-
-        ObjectType Get()const
-        {
-            return m_object;
-        }
-
-        void operator=(Handler &&handler)
-        {
-            m_object = handler.m_object;
-            handler.m_object = nullptr;
-        }
-
-        operator ObjectType()const
-        {
-            return Get();
-        }
-
-
-    protected:
-        ObjectType m_object;
-
-    private:
-        Handler(const Handler&) = delete;
-        void operator=(const Handler&) = delete;
-    };
-
     const char *kClassName = "TestClass";
     class TestMain : public TestCommon::TestBase<TestMain>
     {
@@ -151,7 +29,7 @@ namespace LuaTest
         {
             GetOutputStream() << "lua.test.state.create" << std::endl;
 
-            auto state = Handler<lua_State_Ptr>();
+            auto state = TestCommon::Handler<lua_State*>();
             const luaL_Reg loadedlibs[] = {
                 { "_G", luaopen_base },
                 { LUA_COLIBNAME, luaopen_coroutine },
@@ -180,7 +58,7 @@ namespace LuaTest
         }
 
     protected:
-        void RunCallFunctionTest(lua_State_Ptr state)
+        void RunCallFunctionTest(lua_State *state)
         {
             // call lua function
             luaL_dostring(state, R"--(function add(a, b) return a+b end)--");
@@ -193,10 +71,10 @@ namespace LuaTest
             GetOutputStream() << "call lua function add(1, 2), return " << result << std::endl;
         }
 
-        void RunFunctionCallbackTest(lua_State_Ptr state)
+        void RunFunctionCallbackTest(lua_State *state)
         {
             // regist callback function
-            auto callback = [](lua_State_Ptr l) -> int
+            auto callback = [](lua_State *l) -> int
             {
                 auto left = lua_tonumber(l, 1);
                 auto right = lua_tonumber(l, 2);
@@ -213,10 +91,10 @@ namespace LuaTest
             GetOutputStream() << "lua function callback sub(1, 2), return " << result << std::endl;
         }
 
-        void RunClassTest(lua_State_Ptr state)
+        void RunClassTest(lua_State *state)
         {
             // lua class test
-            auto Constructor = [](lua_State_Ptr l) -> int
+            auto Constructor = [](lua_State *l) -> int
             {
                 auto ptr = (long*)lua_newuserdata(l, sizeof(long));
                 *ptr = 123456;
@@ -228,7 +106,7 @@ namespace LuaTest
                 return 1;
             };
 
-            auto Destructor = [](lua_State_Ptr l) -> int
+            auto Destructor = [](lua_State *l) -> int
             {
                 if (lua_type(l, 1) == LUA_TUSERDATA)
                 {
@@ -244,7 +122,7 @@ namespace LuaTest
                 return 0;
             };
 
-            auto Index = [](lua_State_Ptr l) -> int
+            auto Index = [](lua_State *l) -> int
             {
                 if (lua_type(l, 1) != LUA_TUSERDATA)
                 {
@@ -258,7 +136,7 @@ namespace LuaTest
                 return 1;
             };
 
-            auto TestFunc = [](lua_State_Ptr l) -> int
+            auto TestFunc = [](lua_State *l) -> int
             {
                 if (lua_type(l, 1) == LUA_TUSERDATA)
                 {
