@@ -60,10 +60,12 @@ if(IS_MAC OR IS_IOS)
     )
     find_library(UIKIT UIKit)
     find_library(FOUNDATION Foundation)
+    find_library(JSCORE JavaScriptCore)
     target_link_libraries(lua.test PRIVATE
         lua
         ${FOUNDATION}
         ${UIKIT}
+        ${JSCORE}
     )
     set_target_properties(lua.test PROPERTIES
         RESOURCE "./ios/Main.storyboard"

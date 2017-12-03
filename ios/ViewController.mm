@@ -8,7 +8,7 @@
 
 #import "ViewController.h"
 #include "luatest.h"
-//#include "jstest.h"
+#include "jstest.h"
 #include <iostream>
 
 @interface ViewController ()
@@ -34,6 +34,11 @@
 }
 - (IBAction)jsTestClick:(id)sender {
     NSLog(@"jsTestClick");
+    std::stringstream ss;
+    auto &test = JSTest::TestMain::GetInstance();
+    test.SetOutputStream(ss);
+    test.RunAllTest();
+    [_textView setText:[NSString stringWithUTF8String:ss.str().c_str()]];
 }
 
 - (void)didReceiveMemoryWarning {
