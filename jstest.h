@@ -31,24 +31,24 @@ namespace JSTest
     public:
         TestMain() {}
         
-        void RunAllTest(TestEvent start, TestEvent end)
+        void RunAllTest(TestEvent start, TestEvent end, size_t count)
         {
             GetOutputStream() << "jscore.test.context.create" << std::endl;
             if (start)
             {
                 start();
             }
-            auto ctx = TestCommon::Handler<JSGlobalContextRef>();
-            GetOutputStream() << "jscore.test.start" << std::endl;
-            RunCallFunctionTest(ctx);
-            RunFunctionCallbackTest(ctx);
-            RunClassTest(ctx);
+            std::vector<TestCommon::Handler<JSGlobalContextRef>> ctxs(count);
+            for (auto &ctx: ctxs)
+            {
+                RunCallFunctionTest(ctx);
+                RunFunctionCallbackTest(ctx);
+                RunClassTest(ctx);
+            }
             if (end)
             {
                 end();
-            }
-            GetOutputStream() << "jscore.test.end" << std::endl;
-            
+            }            
             GetOutputStream() << "jscore.test.context.destroy" << std::endl;
         }
         

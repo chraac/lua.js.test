@@ -29,6 +29,8 @@ namespace
         kern_return_t err = task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t)&info, &size);
         return err == KERN_SUCCESS? info.virtual_size: 0;
     }
+    
+    const size_t kInstanceCount = 10;
 }
 
 @interface ViewController ()
@@ -64,10 +66,10 @@ namespace
     {
         endSize = GetMemSize();
         endVirtualSize = GetVirtualSize();
-    });
+    }, kInstanceCount);
     
-    ss << "Memory.Physical.Size(bytes):" << endSize - startSize << std::endl;
-    ss << "Memory.Virtual.Size(bytes):" << endVirtualSize - startVirtualSize << std::endl;
+    ss << "Memory.Physical.Size(bytes):" << (endSize - startSize) / kInstanceCount << std::endl;
+    ss << "Memory.Virtual.Size(bytes):" << (endVirtualSize - startVirtualSize) / kInstanceCount << std::endl;
     
     [_textView setText:[NSString stringWithUTF8String:ss.str().c_str()]];
 }
@@ -91,10 +93,10 @@ namespace
     {
         endSize = GetMemSize();
         endVirtualSize = GetVirtualSize();
-    });
+    }, kInstanceCount);
     
-    ss << "Memory.Physical.Size(bytes):" << endSize - startSize << std::endl;
-    ss << "Memory.Virtual.Size(bytes):" << endVirtualSize - startVirtualSize << std::endl;
+    ss << "Memory.Physical.Size(bytes):" << (endSize - startSize) / kInstanceCount << std::endl;
+    ss << "Memory.Virtual.Size(bytes):" << (endVirtualSize - startVirtualSize) / kInstanceCount << std::endl;
     
     [_textView setText:[NSString stringWithUTF8String:ss.str().c_str()]];
 }

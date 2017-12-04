@@ -15,6 +15,7 @@
 #include "testcommon.h"
 #include "handler.h"
 #include <sstream>
+#include <vector>
 
 
 namespace LuaTest
@@ -25,44 +26,47 @@ namespace LuaTest
         friend class TestCommon::TestBase<TestMain>;
         TestMain(){}
     public:
-        void RunAllTest(TestEvent start, TestEvent end)
+        void RunAllTest(TestEvent start, TestEvent end, size_t count)
         {
             GetOutputStream() << "lua.test.state.create" << std::endl;
-
+            
+            auto LoadLibs = [](lua_State *state)
+            {
+                const luaL_Reg libs[] = {
+                    { "_G", luaopen_base },
+                    { LUA_COLIBNAME, luaopen_coroutine },
+                    { LUA_TABLIBNAME, luaopen_table },
+                    { LUA_OSLIBNAME, luaopen_os },
+                    { LUA_STRLIBNAME, luaopen_string },
+                    { LUA_MATHLIBNAME, luaopen_math },
+                    { LUA_UTF8LIBNAME, luaopen_utf8 },
+                    { LUA_DBLIBNAME, luaopen_debug },
+                    { NULL, NULL }
+                };
+                
+                const luaL_Reg *lib;
+                for (lib = libs; lib->func; lib++) {
+                    luaL_requiref(state, lib->name, lib->func, 1);
+                    lua_pop(state, 1);
+                }
+            };
+            
             if (start)
             {
                 start();
             }
-            auto state = TestCommon::Handler<lua_State*>();
-            const luaL_Reg loadedlibs[] = {
-                { "_G", luaopen_base },
-                { LUA_COLIBNAME, luaopen_coroutine },
-                { LUA_TABLIBNAME, luaopen_table },
-                { LUA_OSLIBNAME, luaopen_os },
-                { LUA_STRLIBNAME, luaopen_string },
-                { LUA_MATHLIBNAME, luaopen_math },
-                { LUA_UTF8LIBNAME, luaopen_utf8 },
-                { LUA_DBLIBNAME, luaopen_debug },
-                { NULL, NULL }
-            };
-
-            const luaL_Reg *lib;
-            for (lib = loadedlibs; lib->func; lib++) {
-                luaL_requiref(state, lib->name, lib->func, 1);
-                lua_pop(state, 1);
+            std::vector<TestCommon::Handler<lua_State*>> states(count);
+            for (auto &state: states)
+            {
+                LoadLibs(state);
+                RunCallFunctionTest(state);
+                RunFunctionCallbackTest(state);
+                RunClassTest(state);
             }
-
-            GetOutputStream() << "lua.test.start" << std::endl;
-            RunCallFunctionTest(state);
-            RunFunctionCallbackTest(state);
-            RunClassTest(state);
             if (end)
             {
                 end();
             }
-            
-            GetOutputStream() << "lua.test.end" << std::endl;
-
             GetOutputStream() << "lua.test.state.destroy" << std::endl;
         }
 

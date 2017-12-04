@@ -39,7 +39,7 @@ namespace TestCommon
         }
         
         
-        virtual void RunAllTest(TestEvent start, TestEvent end) = 0;
+        virtual void RunAllTest(TestEvent start, TestEvent end, size_t count) = 0;
         
     protected:
         std::stringstream *m_ss;
