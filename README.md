@@ -4,7 +4,6 @@
 
 - 开源JS引擎，Webkit在使用
 - iOS 7.0及以上，提供Objective-C和C接口，不支持JIT
-- Android侧需要打包进Ark动态库，可选JIT
 
 ### 初始化
 
@@ -167,8 +166,7 @@ lua内部实际上没有对象机制，这里可以通过metatable来实现对�
     if (lua_isnil(luaState, -1))
     {
         lua_pop(luaState, 1);
-        ArkObject** p = static_cast<ArkObject**>(lua_newuserdata(luaState, sizeof(pObj)));
-        pObj->AddRef();
+        Object** p = static_cast<Object**>(lua_newuserdata(luaState, sizeof(pObj)));
         *p = pObj;
         lua_pushlightuserdata(luaState, pObj);
         lua_pushvalue(luaState, -2);
