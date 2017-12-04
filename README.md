@@ -136,9 +136,9 @@ lua_pushnumber(state, 2);
 lua_call(state, 2, 1);
 ```
 
-### 类创建
+### 类以及对象
 
-ark库内部控件映射到lua是通过lua的metatable机制
+lua内部实际上没有对象机制，这里可以通过metatable来实现对象的属性和继承等，类似于js的prototype
 
 - 建立lua table存放各个api函数，然后这个table以类名为key放在lua的registry表中，需要了解下js是否有这方面接口
 - 代码内将metatale的__index函数和__newindex函数重定向到自己来实现查找，__gc实现对象销毁
